@@ -1,0 +1,39 @@
+name: DT-Build and Deploy to ACR
+
+on:
+  workflow_dispatch:
+    inputs:
+     environment:
+        type: environment
+        description: Select the environment
+        
+env:
+  CONTAINER_VERSION: v0.7.5.2
+
+jobs:
+  build-and-push:
+    runs-on: Linux
+    environment: ${{inputs.environment}}
+
+    steps:
+      # checkout the repo
+      - name: 'Checkout GitHub Action'
+        uses: actions/checkout@main
+
+      - name: 'Build GitHub Runner container image'
+        uses: azure/docker-login@v2
+        with:
+          login-server: ${{secrets.REGISTRY_LOGIN_SERVER}}
+          username: ${{secrets.REGISTRY_USERNAME}}
+          password: ${{secrets.REGISTRY_PASSWORD}}
+      - run: |
+          docker build -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/librechat/prod/dt-librechat:${{ env.CONTAINER_VERSION }} .
+
+      - name: 'Push container image to ACR'
+        uses: azure/docker-login@v2
+        with:
+          login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+      - run: |
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/librechat/prod/dt-librechat:${{ env.CONTAINER_VERSION }}
