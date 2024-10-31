@@ -9,11 +9,12 @@ on:
         
 env:
   RUNNER_VERSION: 2.293.0
-  REGISTRY_USERNAME: acr2lno3op7kuk3o
 
 jobs:
   build-and-push:
     runs-on: Linux
+    environment: ${{inputs.environment}}
+
     steps:
       # checkout the repo
       - name: 'Checkout GitHub Action'
@@ -23,7 +24,7 @@ jobs:
         uses: azure/docker-login@v2
         with:
           login-server: ${{secrets.REGISTRY_LOGIN_SERVER}}
-          username: ${{env.REGISTRY_USERNAME}}
+          username: ${{secrets.REGISTRY_USERNAME}}
           password: ${{secrets.REGISTRY_PASSWORD}}
       - run: |
           docker build --build-arg RUNNER_VERSION=${{ env.RUNNER_VERSION }} -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/pwd9000-github-runner-lin:${{ env.RUNNER_VERSION }} .
