@@ -21,7 +21,7 @@ jobs:
         uses: azure/docker-login@v2
         with:
           login-server: ${{vars.REGISTRY_LOGIN_SERVER}}
-          username: ${{secrets.REGISTRY_USERNAME}}
+          username: ${{vars.REGISTRY_USERNAME}}
           password: ${{secrets.REGISTRY_PASSWORD}}
       - run: |
           docker build -t ${{ vars.REGISTRY_LOGIN_SERVER }}/librechat/prod/dt-librechat:${{ github.ref_name}} .
@@ -30,7 +30,7 @@ jobs:
         uses: azure/docker-login@v2
         with:
           login-server: ${{ vars.REGISTRY_LOGIN_SERVER }}
-          username: ${{ secrets.REGISTRY_USERNAME }}
+          username: ${{ vars.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
       - run: |
           docker push ${{ vars.REGISTRY_LOGIN_SERVER }}/librechat/prod/dt-librechat:${{ github.ref_name }}
