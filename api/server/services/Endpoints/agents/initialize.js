@@ -130,7 +130,7 @@ const initializeClient = async ({ req, res, endpointOption }) => {
     attachments: endpointOption.attachments,
     maxContextTokens:
       agent.max_context_tokens ??
-      getModelMaxTokens(modelOptions.model, providerEndpointMap[agent.provider]),
+      getModelMaxTokens(agent.model, providerEndpointMap[agent.provider]),
   });
   return { client };
 };
