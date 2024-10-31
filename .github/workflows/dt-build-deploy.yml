@@ -6,6 +6,9 @@ on:
      environment:
         type: environment
         description: Select the environment
+     tags:
+        type: tag
+        description: Select the tag for build & deploy 
         
 env:
   CONTAINER_VERSION: v0.7.5.2
@@ -18,7 +21,10 @@ jobs:
     steps:
       # checkout the repo
       - name: 'Checkout GitHub Action'
-        uses: actions/checkout@main
+        uses: actions/checkout@v2
+        with:
+             ref: refs/tags/${{ inputs.tag }}
+
 
       - name: 'Build GitHub Runner container image'
         uses: azure/docker-login@v2
@@ -27,7 +33,7 @@ jobs:
           username: ${{secrets.REGISTRY_USERNAME}}
           password: ${{secrets.REGISTRY_PASSWORD}}
       - run: |
-          docker build -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/librechat/prod/dt-librechat:${{ env.CONTAINER_VERSION }} .
+          docker build -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/librechat/prod/dt-librechat:${{ inputs.tag }} .
 
       - name: 'Push container image to ACR'
         uses: azure/docker-login@v2
@@ -36,4 +42,4 @@ jobs:
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
       - run: |
-          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/librechat/prod/dt-librechat:${{ env.CONTAINER_VERSION }}
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/librechat/prod/dt-librechat:${{ inputs.tag }}
