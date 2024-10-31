@@ -8,16 +8,11 @@ env:
 
 jobs:
   build-and-push:
-    runs-on: ubuntu-latest
+    runs-on: Linux
     steps:
       # checkout the repo
       - name: 'Checkout GitHub Action'
         uses: actions/checkout@main
-
-      - name: 'Login via Azure CLI'
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: 'Build GitHub Runner container image'
         uses: azure/docker-login@v1
