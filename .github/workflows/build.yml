@@ -2,7 +2,11 @@ name: Linux_Container_Workflow
 
 on:
   workflow_dispatch:
-
+    inputs:
+     environment:
+        type: environment
+        description: Select the environment
+        
 env:
   RUNNER_VERSION: 2.293.0
 
